@@ -61,22 +61,20 @@ class Records(Resource):
         responses:
             200:
                 description: A successful GET request
-                content:
-                    application/json:
-                      schema:
-                        type: object
-                        properties:
-                            books:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        title:
-                                            type: string
-                                            description: The title of the book
-                                        author:
-                                            type: string
-                                            description: The author of the book
+                schema:
+                    type: object
+                    properties:
+                        books:
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                    title:
+                                        type: string
+                                        description: The title of the book
+                                    author:
+                                        type: string
+                                        description: The author of the book
         """
 
         count = request.args.get('count')  # Default to returning 10 books if count is not provided
@@ -85,7 +83,7 @@ class Records(Resource):
         # Get all the books
         books = book_review.get_all_records(count=count, sort=sort)
 
-        return jsonify({"books": books})
+        return {"books": books}, 200
     
 class AddRecord(Resource):
 
@@ -114,13 +112,8 @@ class AddRecord(Resource):
         responses:
             200:
                 description: A successful POST request
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                        properties:
-                            message:
-                                type: string
+            400: 
+                description: Bad request, missing 'Book' or 'Rating' in the request body
         """
 
         data = request.json
@@ -128,14 +121,14 @@ class AddRecord(Resource):
 
         # Check if 'Book' and 'Rating' are present in the request body
         if 'Book' not in data or 'Rating' not in data:
-            return jsonify({"message": "Bad request, missing 'Book' or 'Rating' in the request body"})
+            return {"message": "Bad request, missing 'Book' or 'Rating' in the request body"}, 400
         # Call the add_record function to add the record to the DB table
         success = book_review.add_record(data)
 
         if success:
-            return jsonify({"message": "Record added successfully"})
+            return {"message": "Record added successfully"}, 200
         else:
-            return jsonify({"message": "Failed to add record"})
+            return {"message": "Failed to add record"}, 500
         
 
 
