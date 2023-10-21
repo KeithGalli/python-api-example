@@ -4,5 +4,6 @@ flask_restful
 pyairtable
 gunicorn
 PyYAML==6.0.1
+openapi_spec_validator
 connexion
 connexion[swagger-ui]
