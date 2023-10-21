@@ -3,3 +3,5 @@ flasgger
 flask_restful
 pyairtable
 gunicorn
+connexion
+connexion[swagger-ui]

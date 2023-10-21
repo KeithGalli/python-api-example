@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: My API
+  version: '1.0'
+paths:
+  /uppercase:
+    get:
+      tags:
+      - Text Processing
+      parameters:
+        - name: text
+          in: query
+          schema:
+            type: string
+          required: true
+          description: The text to be converted to uppercase
+      responses:
+        '200':
+          description: A successful GET request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: The text in uppercase
+      operationId: handlers.get_uppercase
