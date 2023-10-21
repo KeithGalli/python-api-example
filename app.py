@@ -14,7 +14,7 @@ class UppercaseText(Resource):
         tags:
         - Text Processing
         parameters:
-            - name: text
+            - name: message
               in: query
               type: string
               required: true
@@ -35,6 +35,57 @@ class UppercaseText(Resource):
 
         return {"text": text.upper()}, 200
     
+class StringGenerator(Resource):
+    def get(self):
+        """
+        This method responds to the GET request for this endpoint and generates a modified string.
+        ---
+        tags:
+        - Text Processing
+        parameters:
+            - name: message
+              in: query
+              type: string
+              required: true
+              description: The text to be processed
+            - name: duplication_factor
+              in: query
+              type: integer
+              required: false
+              description: Number of times to duplicate the text (default is 1)
+            - name: capitalization
+              in: query
+              type: string
+              required: false
+              enum: [UPPER, LOWER]
+              description: Capitalization of the text (default is no change)
+        responses:
+            200:
+                description: A successful GET request
+                content:
+                    application/json:
+                      schema:
+                        type: object
+                        properties:
+                            generated_text:
+                                type: string
+                                description: The generated text
+        """
+        args = request.args
+        message = args['message']
+        duplication_factor = int(args.get('duplication_factor', 1))
+        capitalization = args.get('capitalization', None)
+
+        if capitalization == 'UPPER':
+            message = message.upper()
+        elif capitalization == 'LOWER':
+            message = message.lower()
+
+        generated_text = message * duplication_factor
+
+        return {"generated_text": generated_text}, 200
+
+api.add_resource(StringGenerator, "/generate")
 api.add_resource(UppercaseText, "/uppercase")
 
 if __name__ == "__main__":
