@@ -3,5 +3,6 @@ flasgger
 flask_restful
 pyairtable
 gunicorn
+PyYAML==6.0.1
 connexion
 connexion[swagger-ui]
