@@ -9,7 +9,6 @@ api = Api(app)
 swagger = Swagger(app)
 
 class UppercaseText(Resource):
-
     def get(self):
         """
         This method responds to the GET request for this endpoint and returns the data in uppercase.
@@ -39,7 +38,6 @@ class UppercaseText(Resource):
         return jsonify({"text": text.upper()})
     
 class Records(Resource):
-
     def get(self):
         """
         This method responds to the GET request for returning a number of books.
@@ -86,7 +84,6 @@ class Records(Resource):
         return {"books": books}, 200
     
 class AddRecord(Resource):
-
     def post(self):
         """
         This method responds to the POST request for adding a new record to the DB table.

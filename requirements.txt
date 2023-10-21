@@ -1,0 +1,5 @@
+flask
+flasgger
+flask_restful
+pyairtable
+gunicorn
