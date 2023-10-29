@@ -1,54 +1,29 @@
-import os 
+import os
 from pyairtable import Api
 
-API_TOKEN = os.environ.get('AIRTABLE_TOKEN')
+class BookReview:
+    def __init__(self):
+        self.api = Api(os.environ['AIRTABLE_KEY'])
+        self.table = self.api.table('appkUrlrjwHudezoV', 'tblqq5L1PAYh6rGc0')
 
-BASE_ID = 'appi1uzlLKn1TEKSw'
-TABLE_ID = 'tblvMMAVHo901m2Ra'
+    def get_book_ratings(self, sort="ASC", max_records=10):
+        if not sort:
+            return self.table.all(max_records=max_records)
+        elif sort == "ASC":
+            rating = ["Rating"]
+        elif sort == "DESC":
+            rating = ["-Rating"]
+        
+        table = self.table.all(sort=rating, max_records=max_records)
+        return table
 
-api = Api(API_TOKEN)
+    def add_book_rating(self, book_title, book_rating, notes=None):
+        fields = {'Book': book_title, 'Rating': book_rating, 'Notes': notes}
+        self.table.create(fields=fields)
 
-table = api.table(BASE_ID, TABLE_ID)
-
-def get_all_records(count=None, sort=None):
-    sort_param = []
-    if sort and sort.upper()=='DESC':
-        sort_param = ['-Rating']
-    elif sort and sort.upper()=='ASC':
-        sort_param = ['Rating']
-
-    return table.all(max_records=count, sort=sort_param)
-
-def get_record_id(name):
-    return table.first(formula=f"Book='{name}'")['id']
-
-def update_record(record_id, data):
-    table.update(record_id, data)
-
-    return True
-
-def add_record(data):
-    # require data contains a "Book" key and a "Rating" key (data is a dict)
-    if 'Book' not in data or 'Rating' not in data:
-        return False
-
-    table.create(data)
-    return True
 
 if __name__ == '__main__':
-    ## Show getting certain records
-    print("Show getting certain records")
-    print(table.all(formula="Rating < 5", sort=['-Rating']))
-
-    ## Show getting a single record
-    print("Show getting a single record")
-
-    # Replace a record
-    print("Replace a record")
-    name = "Test Message"
-    record_id = table.first(formula=f"Book='{name}'")['id']
-    table.update(record_id, {"Rating": 5})
-
-    ## Show all records
-    print("All records!")
-    print(table.all())
+    br = BookReview()
+    # br.add_book_rating('Infinite Jest', 7.0)
+    get_book_ratings = br.get_book_ratings(sort="DESC", max_records=1)
+    print(get_book_ratings)
